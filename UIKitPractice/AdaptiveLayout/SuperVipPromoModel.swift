@@ -7,12 +7,25 @@
 
 import Foundation
 
+enum VipPromoStatus {
+    case standart, vip
+    
+    func getStatus() -> String {
+        switch self {
+        case .standart: "Подключить"
+        case .vip: "Изменить сейчас"
+        }
+    }
+}
+
 struct SuperVipPromoModel {
+    public var vipStatus: VipPromoStatus = .standart
+    
     public let mainLabelText: String
     public let descriptionLabelText: String
     public let imageName: String
     public let cashbackLabelText: String
-    public let connectButtonText: String
+    public var connectButtonText: String
     public let bottomButtonText: String
 
     public init(
@@ -29,5 +42,15 @@ struct SuperVipPromoModel {
         self.cashbackLabelText = cashbackLabelText
         self.connectButtonText = connectButtonText
         self.bottomButtonText = bottomButtonText
+    }
+    
+    mutating func switchConnectionStatus() {
+        switch vipStatus {
+        case .standart:
+            vipStatus = .vip
+        case .vip:
+            vipStatus = .standart
+        }
+        connectButtonText = vipStatus.getStatus()
     }
 }

@@ -95,11 +95,17 @@ final class SuperVipPromoViewController: UIViewController {
         bindPublishers()
         viewModel.sendDataToView()
         setupUI()
+        setButtonsConstraints()
+    }
+    
+    @objc private func connectButtonTouched() {
+        viewModel.updateStatusState()
+        setButtonsConstraints()
     }
 
     private func setupUI() {
         view.backgroundColor = .systemBackground
-        bottomButton.isHidden = true
+        connectButton.addTarget(self, action: #selector(connectButtonTouched), for: .touchUpInside)
 
         view.addSubviews([
             imageView,
@@ -163,8 +169,31 @@ final class SuperVipPromoViewController: UIViewController {
             bottomButton.widthAnchor.constraint(equalToConstant: Constants.viewWidth),
             bottomButton.heightAnchor.constraint(equalToConstant: 64)
         ])
-        topConstraint = cashbackLabel.topAnchor.constraint(equalTo: bannerContainerView.bottomAnchor, constant: 60)
-        topConstraint?.isActive = true
+    }
+    
+    private func setButtonsConstraints() {
+        let currentStatus = viewModel.getStatus()
+        var topSpacing: CGFloat!
+        
+        switch currentStatus {
+        case .standart:
+            topSpacing = 60
+            bottomButton.isHidden = true
+        case .vip:
+            topSpacing = 8
+            bottomButton.isHidden = false
+        }
+        
+        if let topConstraint {
+            topConstraint.constant = topSpacing
+        } else {
+            topConstraint = cashbackLabel.topAnchor.constraint(equalTo: bannerContainerView.bottomAnchor, constant: topSpacing)
+            topConstraint?.isActive = true
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
 }
 

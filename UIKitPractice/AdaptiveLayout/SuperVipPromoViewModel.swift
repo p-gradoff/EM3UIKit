@@ -18,6 +18,14 @@ class SuperVipPromoViewModel: ObservableObject {
     func sendDataToView() {
         modelPublisher = mockData
     }
+    
+    func updateStatusState() {
+        modelPublisher?.switchConnectionStatus()
+    }
+    
+    func getStatus() -> VipPromoStatus {
+        modelPublisher?.vipStatus ?? .standart
+    }
 }
 
 private extension SuperVipPromoViewModel {
@@ -28,7 +36,7 @@ private extension SuperVipPromoViewModel {
             imageName: "premium",
             cashbackLabelText: "Вы получите кешбэк до 15%",
             connectButtonText: "Подключить",
-            bottomLabelText: "Изменить с 6 октября"
+            bottomButtonText: "Изменить с 6 октября"
         )
     }
 }
